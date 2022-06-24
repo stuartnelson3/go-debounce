@@ -72,6 +72,6 @@ func TestCancelCtx(t *testing.T) {
 	}, time.Millisecond)
 
 	if err := <-d.Trigger(ctx); err != context.Canceled {
-		t.Fatalf("expected error context.ContextCanceled, got %v", err)
+		t.Fatalf("expected error context.Canceled, got %v", err)
 	}
 }
