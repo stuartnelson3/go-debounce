@@ -1,5 +1,12 @@
 ::debounce
 
-small debounce library for golang
+small debounce library for golang.
 
-read the code for the public api
+the configured debounce timeout starts on the first call to `Trigger()`.
+any subsequent calls re-start the timeout.
+
+all calls to `Trigger()` return `<-chan error`.
+this will contain the error from the execution of the debounced function.
+it must be drained by the caller.
+
+read the code for the public api.
