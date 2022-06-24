@@ -63,3 +63,15 @@ func TestMultipleCalls(t *testing.T) {
 		t.Fatalf("expected 3, got %d", n)
 	}
 }
+
+func TestCancelCtx(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	d := New(func() error {
+		return nil
+	}, time.Millisecond)
+
+	if err := <-d.Trigger(ctx); err != context.Canceled {
+		t.Fatalf("expected error context.ContextCanceled, got %v", err)
+	}
+}
