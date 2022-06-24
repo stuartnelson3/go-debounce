@@ -3,6 +3,7 @@ package debounce
 import (
 	"context"
 	"errors"
+	"sync/atomic"
 	"testing"
 	"time"
 )
@@ -43,5 +44,22 @@ func TestDebouncer(t *testing.T) {
 	}
 	if err := <-c3; err == nil {
 		t.Fatal("expected error")
+	}
+}
+
+func TestMultipleCalls(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	var n int64
+	d := New(func() error {
+		atomic.AddInt64(&n, 1)
+		return nil
+	}, time.Millisecond)
+
+	<-d.Trigger(ctx)
+	<-d.Trigger(ctx)
+	<-d.Trigger(ctx)
+	if n != 3 {
+		t.Fatalf("expected 3, got %d", n)
 	}
 }
